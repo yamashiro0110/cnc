@@ -1,0 +1,31 @@
+version: "3.9"
+
+volumes:
+  elasticsearch-store:
+
+services:
+  fluentd:
+    build: ./fluentd
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+      - ./logs:/logs
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      - elasticsearch
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch-store
+  kibana:
+    image: kibana:7.10.1
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
