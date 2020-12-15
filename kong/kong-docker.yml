@@ -69,7 +69,7 @@ plugins:
   - name: file-log
 #    service: example-service
     config:
-      path: /home/kong/tmp/logs/file.log
+      path: /logs/access.log
 # - name: rate-limiting
 #   consumer: example-user
 #   service: another-service
