@@ -1,0 +1,28 @@
+version: "3.9"
+
+volumes:
+  elasticsearch-store:
+
+services:
+  logstash:
+    image: logstash:7.10.1
+    volumes:
+      - ./pipeline:/usr/share/logstash/pipeline
+      - ./logs:/logs
+    depends_on:
+      - elasticsearch
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch-store
+  kibana:
+    image: kibana:7.10.1
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
