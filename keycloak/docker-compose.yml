@@ -2,9 +2,26 @@ version: "3.9"
 
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:12.0.2
+    image: jboss/keycloak:12.0.2
     ports:
       - 8080:8080
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
+      DB_ADDR: database
+      DB_VENDOR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    depends_on:
+      - database
+  database:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+      MYSQL_ROOT_PASSWORD: keycloak
+      TZ: Asia/Tokyo
