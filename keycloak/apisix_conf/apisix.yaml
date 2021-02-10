@@ -1,23 +1,18 @@
 routes:
-  - uri: /
-    upstream_id: 1
-  - uri: /hello.html
+  - uri: /*
     service_id: 1
   - uri: /1*
-    upstream:
-      nodes:
-        "backend-1.localtest.me:80": 1
-      type: roundrobin
+    upstream_id: 1
   - uri: /2*
-    upstream:
-      nodes:
-        "backend-2.localtest.me:80": 1
-      type: roundrobin
+    upstream_id: 2
 
 upstreams:
   - id: 1
     nodes:
       "backend-1.localtest.me:80": 1
+    type: roundrobin
+  - id: 2
+    nodes:
       "backend-2.localtest.me:80": 1
     type: roundrobin
 
@@ -26,4 +21,5 @@ services:
     upstream:
       nodes:
         "backend-1.localtest.me:80": 1
+        "backend-2.localtest.me:80": 1
       type: roundrobin
