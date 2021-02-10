@@ -40,7 +40,7 @@ services:
       - database
     networks:
       keycloak:
-  confidential-client:
+  apisix:
     image: apache/apisix:2.2-alpine
     ports:
       - "9080:9080/tcp"
@@ -50,13 +50,45 @@ services:
       - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
       - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
     depends_on:
+      - etcd
       - backend-1
       - backend-2
     restart: always
     networks:
       keycloak:
         aliases:
-          - confidential-client.localtest.me
+          - apisix.localtest.me
+  apisix-dashboard:
+    image: apache/apisix-dashboard:2.3
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./apisix-dashboard/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+      - ./apisix-dashboard_log:/usr/local/apisix-dashboard/logs
+    depends_on:
+      - apisix
+      - etcd
+    restart: always
+    networks:
+      keycloak:
+        aliases:
+          - apisix-dashboard.localtest.me
+  etcd:
+    image: bitnami/etcd:3.4.9
+    user: root
+    restart: always
+    volumes:
+      - ./etcd_data:/etcd_data
+    environment:
+      ETCD_DATA_DIR: /etcd_data
+      ETCD_ENABLE_V2: "true"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+    ports:
+      - "2379:2379/tcp"
+    networks:
+      keycloak:
   backend-1:
     image: nginx
     ports:
