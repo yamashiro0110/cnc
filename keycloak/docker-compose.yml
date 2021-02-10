@@ -15,6 +15,10 @@ services:
       DB_PASSWORD: keycloak
     depends_on:
       - database
+    networks:
+      keycloak:
+        aliases:
+          - keycloak.localtest.me
   database:
     image: mysql:5.7
     ports:
@@ -25,3 +29,54 @@ services:
       MYSQL_PASSWORD: keycloak
       MYSQL_ROOT_PASSWORD: keycloak
       TZ: Asia/Tokyo
+    networks:
+      keycloak:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 18080:8080
+    depends_on:
+      - database
+    networks:
+      keycloak:
+  confidential-client:
+    image: apache/apisix:2.2-alpine
+    ports:
+      - "9080:9080/tcp"
+      - "9443:9443/tcp"
+    volumes:
+      - ./apisix_log:/usr/local/apisix/logs
+      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
+      - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
+    depends_on:
+      - backend-1
+      - backend-2
+    restart: always
+    networks:
+      keycloak:
+        aliases:
+          - confidential-client.localtest.me
+  backend-1:
+    image: nginx
+    ports:
+      - 10080:80
+    volumes:
+      - ./html/1:/usr/share/nginx/html
+    networks:
+      keycloak:
+        aliases:
+          - backend-1.localtest.me
+  backend-2:
+    image: nginx
+    ports:
+      - 10081:80
+    volumes:
+      - ./html/2:/usr/share/nginx/html
+    networks:
+      keycloak:
+        aliases:
+          - backend-2.localtest.me
+
+networks:
+  keycloak:
