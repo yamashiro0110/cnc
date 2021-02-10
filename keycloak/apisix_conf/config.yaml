@@ -1,30 +1,30 @@
 apisix:
-  config_center: yaml
-  # config_center: etcd
+  # config_center: yaml
+  config_center: etcd
   node_listen: 9080              # APISIX listening port
-  enable_admin: false
+  enable_admin: true
   enable_ipv6: false
-  enable_debug: true
+  enable_debug: false
   # ssl:
   #   enable: false
 
-  # allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
-  #   - 0.0.0.0/0              # We need to restrict ip access rules for security. 0.0.0.0/0 is for test.
+  allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+    - 0.0.0.0/0              # We need to restrict ip access rules for security. 0.0.0.0/0 is for test.
 
-  # admin_key:
-  #   - name: "admin"
-  #     key: edd1c9f034335f136f87ad84b625c8f1
-  #     role: admin                 # admin: manage all configuration data
-  #                                 # viewer: only can view configuration data
-  #   - name: "viewer"
-  #     key: 4054f7cf07e344346cd3f287985e76a2
-  #     role: viewer
+  admin_key:
+    - name: "admin"
+      key: edd1c9f034335f136f87ad84b625c8f1
+      role: admin                 # admin: manage all configuration data
+                                  # viewer: only can view configuration data
+    - name: "viewer"
+      key: 4054f7cf07e344346cd3f287985e76a2
+      role: viewer
 
 nginx_config:
   error_log_level: "error"
 
-# etcd:
-#   host:                           # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
-#     - "http://etcd:2379"     # multiple etcd address
-#   prefix: "/apisix"               # apisix configurations prefix
-#   timeout: 30                     # 30 seconds
+etcd:
+  host:                           # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
+    - "http://etcd:2379"     # multiple etcd address
+  prefix: "/apisix"               # apisix configurations prefix
+  timeout: 30                     # 30 seconds
