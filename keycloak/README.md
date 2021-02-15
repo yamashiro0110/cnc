@@ -5,6 +5,8 @@
 
 Keycloakの設定等については、[ここ](./docs/README.md)を参照。
 
+[realm-export.json](./realm-export.json)に、keycloakの設定をエクスポートした。
+
 ## Usage
 
 ```sh
