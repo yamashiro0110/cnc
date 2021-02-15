@@ -6,8 +6,8 @@ services:
     ports:
       - 8080:8080
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_USER: root
+      KEYCLOAK_PASSWORD: root
       DB_ADDR: database
       DB_VENDOR: mysql
       DB_DATABASE: keycloak
@@ -29,6 +29,8 @@ services:
       MYSQL_PASSWORD: keycloak
       MYSQL_ROOT_PASSWORD: keycloak
       TZ: Asia/Tokyo
+    volumes:
+      - mysql_store:/var/lib/mysql
     networks:
       keycloak:
   adminer:
@@ -40,75 +42,94 @@ services:
       - database
     networks:
       keycloak:
-  apisix:
-    image: apache/apisix:2.2-alpine
-    ports:
-      - "9080:9080/tcp"
-      - "9443:9443/tcp"
+  # apisix:
+  #   image: apache/apisix:2.2-alpine
+  #   ports:
+  #     - "9080:9080/tcp"
+  #     - "9443:9443/tcp"
+  #   volumes:
+  #     - ./apisix_log:/usr/local/apisix/logs
+  #     - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
+  #     - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
+  #   depends_on:
+  #     - etcd
+  #     - backend-1
+  #     - backend-2
+  #   restart: always
+  #   networks:
+  #     keycloak:
+  #       aliases:
+  #         - apisix.localtest.me
+  # apisix-dashboard:
+  #   image: apache/apisix-dashboard:2.3
+  #   ports:
+  #     - "9000:9000"
+  #   volumes:
+  #     - ./apisix-dashboard/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+  #     - ./apisix-dashboard_log:/usr/local/apisix-dashboard/logs
+  #   depends_on:
+  #     - apisix
+  #     - etcd
+  #   restart: always
+  #   networks:
+  #     keycloak:
+  #       aliases:
+  #         - apisix-dashboard.localtest.me
+  # etcd:
+  #   image: bitnami/etcd:3.4.9
+  #   user: root
+  #   restart: always
+  #   volumes:
+  #     - ./etcd_data:/etcd_data
+  #   environment:
+  #     ETCD_DATA_DIR: /etcd_data
+  #     ETCD_ENABLE_V2: "true"
+  #     ALLOW_NONE_AUTHENTICATION: "yes"
+  #     ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+  #     ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+  #   ports:
+  #     - "2379:2379/tcp"
+  #   networks:
+  #     keycloak:
+  mod_auth_openidc:
+    build:
+      context: ./mod_auth_openidc
     volumes:
-      - ./apisix_log:/usr/local/apisix/logs
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
-      - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
-    depends_on:
-      - etcd
-      - backend-1
-      - backend-2
-    restart: always
-    networks:
-      keycloak:
-        aliases:
-          - apisix.localtest.me
-  apisix-dashboard:
-    image: apache/apisix-dashboard:2.3
-    ports:
-      - "9000:9000"
-    volumes:
-      - ./apisix-dashboard/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-      - ./apisix-dashboard_log:/usr/local/apisix-dashboard/logs
-    depends_on:
-      - apisix
-      - etcd
-    restart: always
-    networks:
-      keycloak:
-        aliases:
-          - apisix-dashboard.localtest.me
-  etcd:
-    image: bitnami/etcd:3.4.9
-    user: root
-    restart: always
-    volumes:
-      - ./etcd_data:/etcd_data
+      - ./mod_auth_openidc/openidc.conf:/etc/apache2/conf.d/openidc.conf
     environment:
-      ETCD_DATA_DIR: /etcd_data
-      ETCD_ENABLE_V2: "true"
-      ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: "*"
     ports:
-      - "2379:2379/tcp"
-    networks:
-      keycloak:
-  backend-1:
-    image: nginx
-    ports:
-      - 10080:80
-    volumes:
-      - ./html/1:/usr/share/nginx/html
+      - "10080:80"
+    restart: always
     networks:
       keycloak:
         aliases:
-          - backend-1.localtest.me
-  backend-2:
+          - oidc-proxy.localtest.me
+  backend-1:
     image: nginx
     ports:
       - 10081:80
     volumes:
-      - ./html/2:/usr/share/nginx/html
+      - ./html:/usr/share/nginx/html
     networks:
       keycloak:
         aliases:
-          - backend-2.localtest.me
+          - backend1.localtest.me
+  backend-2:
+    image: nginx
+    ports:
+      - 10082:80
+    volumes:
+      - ./html:/usr/share/nginx/html
+    networks:
+      keycloak:
+        aliases:
+          - backend2.localtest.me
 
 networks:
   keycloak:
+
+volumes:
+  mysql_store:
