@@ -3,14 +3,12 @@
 `Keycloak`を動かしてみる。
 > https://www.keycloak.org/getting-started/getting-started-docker
 
+Keycloakの設定等については、[ここ](./docs/README.md)を参照。
+
 ## Usage
 
 ```sh
 $ docker-compose up
 ```
 
-`http://localhost:8080/auth/admin`にアクセスする。
-
-## Note
-
-- https://keycloak-documentation.openstandia.jp/
+`http://keycloak.localtest.me:8080/auth/`にアクセスする。
