@@ -47,17 +47,22 @@ services:
       context: ./mod_auth_openidc
     volumes:
       - ./mod_auth_openidc/openidc.conf:/etc/apache2/conf.d/openidc.conf
+      - ./mod_auth_openidc/ssl.conf:/etc/apache2/conf.d/ssl.conf
+      - ./mod_auth_openidc/server.crt:/etc/apache2/conf.d/server.crt
+      - ./mod_auth_openidc/server.key:/etc/apache2/conf.d/server.key
     environment:
       http_proxy: ""
       https_proxy: ""
       no_proxy: "*"
     ports:
-      - "10080:80"
+      - "80:80"
+      - "443:443"
     restart: always
     networks:
       keycloak:
         aliases:
-          - oidc-proxy.localtest.me
+          - oidc-proxy
+          - keycloak-proxy
   backend-1:
     image: nginx
     ports:
@@ -66,8 +71,6 @@ services:
       - ./html:/usr/share/nginx/html
     networks:
       keycloak:
-        aliases:
-          - backend1.localtest.me
   backend-2:
     image: nginx
     ports:
@@ -76,8 +79,6 @@ services:
       - ./html:/usr/share/nginx/html
     networks:
       keycloak:
-        aliases:
-          - backend2.localtest.me
 
 networks:
   keycloak:
