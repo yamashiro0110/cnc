@@ -95,3 +95,6 @@ modules.xml
 tmp/
 *.log
 *.pos
+
+!.gitkeep
+etcd_data/

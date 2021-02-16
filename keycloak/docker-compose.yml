@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: jboss/keycloak:12.0.2
+    ports:
+      - 8080:8080
+    environment:
+      KEYCLOAK_USER: root
+      KEYCLOAK_PASSWORD: root
+      DB_ADDR: database
+      DB_VENDOR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    depends_on:
+      - database
+    networks:
+      keycloak:
+        aliases:
+          - keycloak.localtest.me
+  database:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+      MYSQL_ROOT_PASSWORD: keycloak
+      TZ: Asia/Tokyo
+    volumes:
+      - mysql_store:/var/lib/mysql
+    networks:
+      keycloak:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 18080:8080
+    depends_on:
+      - database
+    networks:
+      keycloak:
+  mod_auth_openidc:
+    build:
+      context: ./mod_auth_openidc
+    volumes:
+      - ./mod_auth_openidc/openidc.conf:/etc/apache2/conf.d/openidc.conf
+      - ./mod_auth_openidc/ssl.conf:/etc/apache2/conf.d/ssl.conf
+      - ./mod_auth_openidc/server.crt:/etc/apache2/conf.d/server.crt
+      - ./mod_auth_openidc/server.key:/etc/apache2/conf.d/server.key
+    environment:
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: "*"
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    networks:
+      keycloak:
+        aliases:
+          - oidc-proxy
+          - keycloak-proxy
+  backend-1:
+    image: nginx
+    ports:
+      - 10081:80
+    volumes:
+      - ./html:/usr/share/nginx/html
+    networks:
+      keycloak:
+  backend-2:
+    image: nginx
+    ports:
+      - 10082:80
+    volumes:
+      - ./html:/usr/share/nginx/html
+    networks:
+      keycloak:
+
+networks:
+  keycloak:
+
+volumes:
+  mysql_store:
