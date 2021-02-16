@@ -788,18 +788,18 @@
     {
       "id": "5b120d08-0e9a-4d91-828f-3a99d26b36b9",
       "clientId": "sample-app",
-      "rootUrl": "http://oidc-proxy.localtest.me:10080/",
-      "adminUrl": "http://oidc-proxy.localtest.me:10080/",
+      "rootUrl": "https://oidc-proxy.localtest.me/",
+      "adminUrl": "https://oidc-proxy.localtest.me/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://oidc-proxy.localtest.me:10080/*"
+        "https://oidc-proxy.localtest.me/*"
       ],
       "webOrigins": [
-        "http://oidc-proxy.localtest.me:10080"
+        "https://oidc-proxy.localtest.me/"
       ],
       "notBefore": 0,
       "bearerOnly": false,
