@@ -131,16 +131,7 @@ Keycloakサーバで認可の設定を管理することが出来る。
 > - https://www.atmarkit.co.jp/ait/articles/1904/03/news003.html
 > - https://www.atmarkit.co.jp/ait/articles/1810/22/news011.html
 
-### mod_auth_openidcの設定
+## Tips
 
-#### openidc.conf
-
-Apache(Apache HTTP Server)の設定ファイルをincludeされるディレクトリに作成する。
-
-今回の例では、`keycloak/mod_auth_openidc/openidc.conf`に作成して、
-`docker-compose`のvolumeでincludeされるディレクトリにmountしている。
-
-設定については下記を参照。
-
-- https://github.com/zmartzone/mod_auth_openidc/wiki/Authorization
-- https://github.com/zmartzone/mod_auth_openidc/blob/master/auth_openidc.conf
+keycloakのエンドポイント一覧
+> https://keycloak-documentation.openstandia.jp/master/ja_JP/securing_apps/#%E3%82%A8%E3%83%B3%E3%83%89%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88-2

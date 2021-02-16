@@ -41,7 +41,14 @@
 $ docker-compose up
 ```
 
-`http://keycloak.localtest.me:8080/auth/`にアクセスする。
+- keycloak
+  - http://keycloak.localtest.me:8080/
+
+- OpenID Connect プロキシ
+  - https://oidc-proxy.localtest.me:443/
+
+- OAuth2.0 プロキシ
+  - https://oauth-proxy.localtest.me:443/
 
 ## 参考
 
