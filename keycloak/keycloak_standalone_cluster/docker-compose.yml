@@ -3,8 +3,9 @@ version: "3.9"
 x-keycloak-config:
   &keycloak-config
   # https://github.com/keycloak/keycloak-containers/tree/12.0.2/server#creating-admin-account
-  KEYCLOAK_USER: root
-  KEYCLOAK_PASSWORD: root
+  # KEYCLOAK_USER: root
+  # KEYCLOAK_PASSWORD: root
+  KEYCLOAK_LOGLEVEL: "DEBUG"
   # https://github.com/keycloak/keycloak-containers/tree/12.0.2/server#environment-variables
   DB_ADDR: database
   DB_VENDOR: mysql
@@ -16,12 +17,18 @@ x-keycloak-config:
 
 services:
   load_balancer:
-    image: httpd:2.4-alpine
+    image: httpd:2.4
+    # image: httpd:2.4-alpine
     ports:
       - 80:80
     volumes:
       - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./httpd/keycloak-proxy.conf:/usr/local/apache2/conf/extra/keycloak-proxy.conf
+    networks:
+      keycloak_cluster:
+  keycloak_init:
+    image: jboss/keycloak:12.0.2
+    command: "/opt/jboss/keycloak/bin/add-user-keycloak.sh -u root -p root"
   keycloak_1:
     image: jboss/keycloak:12.0.2
     ports:
@@ -30,6 +37,9 @@ services:
       << : *keycloak-config
     depends_on:
       - database
+    networks:
+      keycloak_cluster:
+        ipv4_address: 172.16.238.10
   keycloak_2:
     image: jboss/keycloak:12.0.2
     ports:
@@ -38,6 +48,9 @@ services:
       << : *keycloak-config
     depends_on:
       - database
+    networks:
+      keycloak_cluster:
+        ipv4_address: 172.16.238.11
   database:
     image: mysql:5.7
     ports:
@@ -50,6 +63,8 @@ services:
       TZ: Asia/Tokyo
     volumes:
       - mysql_store:/var/lib/mysql
+    networks:
+      keycloak_cluster:
   # app_1:
   #   image: nginx
   #   ports:
@@ -59,3 +74,10 @@ services:
 
 volumes:
   mysql_store:
+
+networks:
+  keycloak_cluster:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
