@@ -1,0 +1,61 @@
+version: "3.9"
+
+x-keycloak-config:
+  &keycloak-config
+  # https://github.com/keycloak/keycloak-containers/tree/12.0.2/server#creating-admin-account
+  KEYCLOAK_USER: root
+  KEYCLOAK_PASSWORD: root
+  # https://github.com/keycloak/keycloak-containers/tree/12.0.2/server#environment-variables
+  DB_ADDR: database
+  DB_VENDOR: mysql
+  DB_DATABASE: keycloak
+  DB_USER: keycloak
+  DB_PASSWORD: keycloak
+  # https://github.com/keycloak/keycloak-containers/tree/12.0.2/server#enabling-proxy-address-forwarding
+  PROXY_ADDRESS_FORWARDING: "true"
+
+services:
+  load_balancer:
+    image: httpd:2.4-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./httpd/keycloak-proxy.conf:/usr/local/apache2/conf/extra/keycloak-proxy.conf
+  keycloak_1:
+    image: jboss/keycloak:12.0.2
+    ports:
+      - 18080:8080
+    environment:
+      << : *keycloak-config
+    depends_on:
+      - database
+  keycloak_2:
+    image: jboss/keycloak:12.0.2
+    ports:
+      - 18081:8080
+    environment:
+      << : *keycloak-config
+    depends_on:
+      - database
+  database:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+      MYSQL_ROOT_PASSWORD: keycloak
+      TZ: Asia/Tokyo
+    volumes:
+      - mysql_store:/var/lib/mysql
+  # app_1:
+  #   image: nginx
+  #   ports:
+  #     - 10080:80
+  #   volumes:
+  #     - ../html:/usr/share/nginx/html
+
+volumes:
+  mysql_store:
