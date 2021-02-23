@@ -9,6 +9,7 @@ services:
       KEYCLOAK_USER: root
       KEYCLOAK_PASSWORD: root
       KEYCLOAK_LOGLEVEL: "DEBUG"
+      PROXY_ADDRESS_FORWARDING: "true"
       DB_ADDR: database
       DB_VENDOR: mysql
       DB_DATABASE: keycloak
