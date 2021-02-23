@@ -8,6 +8,7 @@ services:
     environment:
       KEYCLOAK_USER: root
       KEYCLOAK_PASSWORD: root
+      KEYCLOAK_LOGLEVEL: "DEBUG"
       DB_ADDR: database
       DB_VENDOR: mysql
       DB_DATABASE: keycloak
