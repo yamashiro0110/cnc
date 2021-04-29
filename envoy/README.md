@@ -48,8 +48,8 @@ Listener filters
 - filter_chainを開始する前に実行できるfilterらしい
 - プロトコルの判定、TLSの判定とかが出来る(という記載があるようだけど、用途がよくわからん)
 - L3,L4の接続情報を操作する場合に使うっぽい(?)
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/listeners/listener_filters.html?highlight=listener%20filters
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/listeners/listeners#listeners
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/listeners/listener_filters.html?highlight=listener%20filters
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/listeners/listeners#listeners
 
 
 ## Conf
@@ -74,27 +74,27 @@ HTTP connection management
 - リクエストのルーティングが出来る
 - リクエストが失敗したときのリトライ
 - リダイレクトのサポート
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_connection_management
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_connection_management
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto
 
 HTTP filters
 - filterは定義した順に適用される
 - `http_filters`は`http_connection_manager`のフィールドになっている
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_filters
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-field-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-http-filters
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_filters
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-field-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-http-filters
 
 HTTP routing
 - ルーティングできる条件が色々ある
 - ex) VirtualHost, Pathの正規表現のパターン, ルーティングせずにEnvoyでレスポンスを返す, HTTPヘッダ
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_routing
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http_routing
 
 #### External Authorization
 
 リクエストを外部サービスに委譲して、認証・認可を実行できる。
 `HTTP filters`として設定する。
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/security/ext_authz_filter#arch-overview-ext-authz
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/configuration/http/http_filters/ext_authz_filter#config-http-filters-ext-authz
-> https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/http/ext_authz/v3/ext_authz.proto#envoy-v3-api-msg-extensions-filters-http-ext-authz-v3-extauthz
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/security/ext_authz_filter#arch-overview-ext-authz
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/configuration/http/http_filters/ext_authz_filter#config-http-filters-ext-authz
+> - https://www.envoyproxy.io/docs/envoy/v1.18.2/api-v3/extensions/filters/http/ext_authz/v3/ext_authz.proto#envoy-v3-api-msg-extensions-filters-http-ext-authz-v3-extauthz
 
 ## Usage
 
