@@ -67,7 +67,7 @@ typed_config
 
 ### HTTP
 
-https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http
+> https://www.envoyproxy.io/docs/envoy/v1.18.2/intro/arch_overview/http/http
 
 HTTP connection management
 - HTTPリクエストのフィルタやレスポンスを操作することが出来る
