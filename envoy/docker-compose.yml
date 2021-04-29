@@ -2,7 +2,30 @@ version: "3.8"
 
 services:
   front-envoy:
+    image: envoyproxy/envoy:v1.18.2
     ports:
-      - 80:80
+      - 8080:8080
+      - 8001:8001
     volumes:
-      - ./front-envoy.yml:/tec/front-envoy.yml
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - ext_authz-http-service
+      - backend-service
+  ext_authz-http-service:
+    image: erikap/ruby-sinatra:ruby2.5-latest
+    volumes:
+      - ./app/sinatra:/usr/src/app
+    ports:
+      - 10080:80
+    environment:
+      RACK_ENV: "development"
+      MAIN_APP_FILE: "auth.rb"
+  backend-service:
+    image: erikap/ruby-sinatra:ruby2.5-latest
+    volumes:
+      - ./app/sinatra:/usr/src/app
+    ports:
+      - 10081:80
+    environment:
+      RACK_ENV: "development"
+      MAIN_APP_FILE: "app.rb"
