@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  auth:
+    image: erikap/ruby-sinatra:ruby2.5-latest
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 10081:80
+    environment:
+      RACK_ENV: "development"
+      MAIN_APP_FILE: "auth.rb"
+  app:
+    image: erikap/ruby-sinatra:ruby2.5-latest
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 10080:80
+    environment:
+      RACK_ENV: "development"
+      MAIN_APP_FILE: "app.rb"
