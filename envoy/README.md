@@ -105,6 +105,7 @@ $ docker-compose up
 External Authorization
 
 - 認証に成功する場合
+  - `backend-service`のレスポンスが返される
 
 ```sh
 $ curl --location --request GET 'http://envoy.localtest.me:8080/' \
