@@ -1,0 +1,47 @@
+version: "3"
+
+volumes:
+  postgres-store:
+
+services:
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: digdag
+      POSTGRES_USER: digdag
+      POSTGRES_PASSWORD: digdag
+    volumes:
+      - postgres-store
+  digdag:
+    build: .
+    image: digdag:example
+  digdag-server-1:
+    image: digdag:example
+    ports:
+      - 65432:65432
+    volumes:
+      - ./bin/digdag-cluster-run.sh:/usr/local/bin/digdag-server.sh
+      - ./conf/server.properties:/usr/local/etc/server.properties
+    entrypoint: [sh, /usr/local/bin/digdag-server.sh]
+    depends_on:
+      - postgres
+  digdag-server-2:
+    image: digdag:example
+    ports:
+      - 65431:65432
+    volumes:
+      - ./bin/digdag-cluster-run.sh:/usr/local/bin/digdag-server.sh
+      - ./conf/server.properties:/usr/local/etc/server.properties
+    entrypoint: [sh, /usr/local/bin/digdag-server.sh]
+    depends_on:
+      - postgres
+  digdag-server-3:
+    image: digdag:example
+    ports:
+      - 65430:65432
+    volumes:
+      - ./bin/digdag-cluster-run.sh:/usr/local/bin/digdag-server.sh
+      - ./conf/server.properties:/usr/local/etc/server.properties
+    entrypoint: [sh, /usr/local/bin/digdag-server.sh]
+    depends_on:
+      - postgres
