@@ -1,7 +1,13 @@
 version: "3"
 
 services:
-  digdag-server:
+  digdag:
     build: .
+    image: digdag:example
+  digdag-server:
+    image: digdag:example
+    volumes:
+      - ./bin/digdag-server-run.sh:/usr/local/bin/digdag-server.sh
     ports:
       - 65432:65432
+    entrypoint: [sh, /usr/local/bin/digdag-server.sh]
