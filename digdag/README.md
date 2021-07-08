@@ -28,8 +28,18 @@ Server version: 0.10.1
 start digdag server
 > `http://127.0.0.1:65432`で、digdag uiが起動する
 
-```
+```sh
+# single server
 $ docker-compose up
+
+# multi server
+$ docker-compose -f docker-compose-cluster.yml up
+```
+
+digdag init
+
+```sh
+$ digdag init sample
 ```
 
 digdag push
