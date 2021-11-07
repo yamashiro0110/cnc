@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+  consul-server1:
+    image: consul
+    networks:
+      consul_net:
+        ipv4_address: 172.16.0.2
+    ports:
+      - "8500:8500"
+    command:
+      - consul
+      - agent
+      - -data-dir=/consul/data
+      - -server
+      - -bootstrap-expect=1
+      - -bind=172.16.0.2
+      - -ui
+      - -client=0.0.0.0
+      - -config-dir=/consul/config
+  consul-client1:
+    image: consul
+    networks:
+      consul_net:
+        ipv4_address: 172.16.0.10
+    ports:
+      - "18500:8500"
+    volumes:
+      - "./config:/consul/config"
+    command:
+      - consul
+      - agent
+      - -data-dir=/consul/data
+      - -bind=172.16.0.10
+      - -join=172.16.0.2
+      - -ui
+      - -client=0.0.0.0
+      - -config-dir=/consul/config
+    depends_on:
+      - consul-server1
+  consul-client2:
+    image: consul
+    networks:
+      consul_net:
+        ipv4_address: 172.16.0.11
+    ports:
+      - "28500:8500"
+    volumes:
+      - "./config:/consul/config"
+    command:
+      - consul
+      - agent
+      - -data-dir=/consul/data
+      - -bind=172.16.0.11
+      - -join=172.16.0.2
+      - -ui
+      - -client=0.0.0.0
+      - -config-dir=/consul/config
+    depends_on:
+      - consul-server1
+
+networks:
+  consul_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.0.0/24"
