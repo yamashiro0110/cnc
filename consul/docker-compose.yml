@@ -36,6 +36,7 @@ services:
       - -ui
       - -client=0.0.0.0
       - -config-dir=/consul/config
+      - -enable-local-script-checks
     depends_on:
       - consul-server1
   consul-client2:
@@ -56,8 +57,15 @@ services:
       - -ui
       - -client=0.0.0.0
       - -config-dir=/consul/config
+      - -enable-local-script-checks
     depends_on:
       - consul-server1
+  openresty:
+    image: openresty/openresty
+    networks:
+      consul_net:
+    ports:
+      - "8888:80"
 
 networks:
   consul_net:
