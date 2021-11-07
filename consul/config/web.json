@@ -15,7 +15,7 @@
       "tags": ["healthcheck", "http"],
       "checks": [
         {
-          "http": "http://openresty:80/",
+          "http": "http://web:80/",
           "method": "GET",
           "interval": "10s",
           "timeout": "1s"
