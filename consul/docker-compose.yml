@@ -32,7 +32,7 @@ services:
       - agent
       - -data-dir=/consul/data
       - -bind=172.16.0.10
-      - -join=172.16.0.2
+      - -join=consul-server1
       - -ui
       - -client=0.0.0.0
       - -config-dir=/consul/config
@@ -53,14 +53,14 @@ services:
       - agent
       - -data-dir=/consul/data
       - -bind=172.16.0.11
-      - -join=172.16.0.2
+      - -join=consul-server1
       - -ui
       - -client=0.0.0.0
       - -config-dir=/consul/config
       - -enable-local-script-checks
     depends_on:
       - consul-server1
-  openresty:
+  web:
     image: openresty/openresty
     networks:
       consul_net:
