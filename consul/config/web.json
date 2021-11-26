@@ -1,0 +1,26 @@
+{
+  "services": [
+    {
+      "name": "hello world",
+      "tags": ["app"],
+      "checks": [
+        {
+          "args": ["echo", "hello world"],
+          "interval": "10s"
+        }
+      ]
+    },
+    {
+      "name": "healthcheck",
+      "tags": ["healthcheck", "http"],
+      "checks": [
+        {
+          "http": "http://web:80/",
+          "method": "GET",
+          "interval": "10s",
+          "timeout": "1s"
+        }
+      ]
+    }
+  ]
+}
